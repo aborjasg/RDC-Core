@@ -17,3 +17,9 @@ Solution for journalists
 - DB Context
 - Entity Framework
 - LINQ
+
+4. Technical Specification: 
+- Language(s): C#, Javascript
+- ASP.Net Core 5.0
+- Middlewares: MVC, HealthChecks, Razor Pages
+- Publishing: IIS (Web App), Docker containers (REST API)
