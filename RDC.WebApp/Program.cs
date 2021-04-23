@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,10 +24,16 @@ namespace RDC.WebApp
                      logBuilder.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                      logBuilder.AddConsole();
                      logBuilder.AddDebug();
-                 })
+                 })                
                 .ConfigureWebHostDefaults(webBuilder =>
-                {
+                {   
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config
+                    .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
+                    .AddJsonFile(Path.Combine("APIGateway", "OcelotConfiguration.json"), optional: false, reloadOnChange: true);
                 });
     }
 }

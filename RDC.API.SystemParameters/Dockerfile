@@ -10,17 +10,17 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["RDC.API.SystemUsers/RDC.API.SystemUsers.csproj", "RDC.API.SystemUsers/"]
+COPY ["RDC.API.SystemParameters/RDC.API.SystemParameters.csproj", "RDC.API.SystemParameters/"]
 COPY ["RDC.API.Common/RDC.API.Common.csproj", "RDC.API.Common/"]
-RUN dotnet restore "RDC.API.SystemUsers/RDC.API.SystemUsers.csproj"
+RUN dotnet restore "RDC.API.SystemParameters/RDC.API.SystemParameters.csproj"
 COPY . .
-WORKDIR "/src/RDC.API.SystemUsers"
-RUN dotnet build "RDC.API.SystemUsers.csproj" -c Release -o /app/build
+WORKDIR "/src/RDC.API.SystemParameters"
+RUN dotnet build "RDC.API.SystemParameters.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "RDC.API.SystemUsers.csproj" -c Release -o /app/publish
+RUN dotnet publish "RDC.API.SystemParameters.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "RDC.API.SystemUsers.dll"]
+ENTRYPOINT ["dotnet", "RDC.API.SystemParameters.dll"]
