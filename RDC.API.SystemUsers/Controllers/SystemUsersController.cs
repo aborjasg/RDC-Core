@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RDC.API;
 using RDC.API.SystemUsers;
 
@@ -15,17 +16,20 @@ namespace RDC.API.SystemUsers.Controllers
     public class SystemUsersController : ControllerBase
     {
         private readonly Data.RDCContext _context;
+        private readonly ILogger _logger;
 
-        public SystemUsersController(Data.RDCContext context)
+        public SystemUsersController(ILogger<SystemUsersController> logger, Data.RDCContext context)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/SystemUsers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Models.SystemUser>>> GetSystemUser()
         {
-            return await _context.SystemUsers.ToListAsync();
+            _logger.LogInformation($"#rows: {_context.SystemUsers.Count()}");
+            return Ok(await _context.SystemUsers.ToListAsync());
         }
 
         // GET: api/SystemUsers/5
@@ -39,7 +43,7 @@ namespace RDC.API.SystemUsers.Controllers
                 return NotFound();
             }
 
-            return systemUser;
+            return Ok(systemUser);
         }
 
         // PUT: api/SystemUsers/5
@@ -47,7 +51,7 @@ namespace RDC.API.SystemUsers.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSystemUser(short id, Models.SystemUser systemUser)
         {
-            if (id != systemUser.SSystemUserId)
+            if (id != systemUser.sSystemUserId)
             {
                 return BadRequest();
             }
@@ -56,7 +60,7 @@ namespace RDC.API.SystemUsers.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                Ok(await _context.SaveChangesAsync());
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -81,7 +85,7 @@ namespace RDC.API.SystemUsers.Controllers
             _context.SystemUsers.Add(systemUser);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSystemUser", new { id = systemUser.SSystemUserId }, systemUser);
+            return CreatedAtAction("GetSystemUser", new { id = systemUser.sSystemUserId}, systemUser);
         }
 
         // DELETE: api/SystemUsers/5
@@ -102,7 +106,7 @@ namespace RDC.API.SystemUsers.Controllers
 
         private bool SystemUserExists(short id)
         {
-            return _context.SystemUsers.Any(e => e.SSystemUserId == id);
+            return _context.SystemUsers.Any(e => e.sSystemUserId == id);
         }
     }
 }

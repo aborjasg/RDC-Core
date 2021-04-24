@@ -48,6 +48,8 @@ namespace RDC.API.SystemUsers
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RDC.API.SystemUsers", Version = "v1" });
             });
+
+            services.AddLogging();
                         
         }
 

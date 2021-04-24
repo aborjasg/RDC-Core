@@ -7,7 +7,7 @@ using RDC.API.SystemParameters.Models;
 
 namespace RDC.API.SystemParameters.Data
 {
-    public class RDCContext : DbContext
+    public partial class RDCContext : DbContext
     {
         public RDCContext(DbContextOptions<RDCContext> options) : base(options)
         {
@@ -20,5 +20,16 @@ namespace RDC.API.SystemParameters.Data
         public virtual DbSet<SystemParameter> SystemParameters { get; set; }
         public virtual DbSet<SystemSection> SystemSections { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SystemParameter>(entity =>
+            {
+                entity.ToTable("SystemParameter", "Configuration");
+            });
+
+            OnModelCreatingPartial(modelBuilder);
+        }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
